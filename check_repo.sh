@@ -5,7 +5,7 @@
 #\ V / _` | '_| / _` | '_ \ / -_|_-<
 # \_/\__,_|_| |_\__,_|_.__/_\___/__/
 #            
-PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" #${PWD}
+PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 config_file="$PWD/repos.conf"
 log_file="$PWD/repo.log"
 DATE=$(date)
@@ -22,6 +22,7 @@ NC='\033[0m'
 #|_|_|_\__,_|_|_||_|
 #                
 if [ ! -e $config_file ]; then
+    #creates template for repository list
     echo "No repo-list given!"
     echo "# _ _ ___ _ __  ___ ___" >> $config_file
     echo "#| '_/ -_) '_ \/ _ (_-<" >> $config_file
@@ -33,16 +34,20 @@ if [ ! -e $config_file ]; then
     echo "/full/path/to/your/repository" >> $config_file
     exit
 else
+    #delete existing log file
     rm -f $log_file
     echo "-------------------------------" | tee -a $log_file
     echo "Repository status for $DATE" | tee -a $log_file
     echo "-------------------------------" | tee -a $log_file
+    #skip blank lines and lines starting with '#'
     sed -e '/^\s*$/ d' -e '/^#/ d' $config_file | while read repo; do
+        #check if folder exists
 	if [ -e $repo ]; then
 		update=$false
+		push=$false
 		echo "$repo" | tee -a $log_file 
 		cd "${repo}"
-
+                #fetch is needed to check if a repository has changed
 		git fetch | tee -a $log_file
 
 		LOCAL=$(git rev-parse @)
@@ -58,6 +63,7 @@ else
 		    echo "Need to pull" >> $log_file
 		    update=$true
 		elif [ $REMOTE = $BASE ]; then
+                    push=$true
 		    echo -e "${BLUE}Need to push${NC}"
 		    echo "Need to push" >> $log_file
 		else
@@ -69,11 +75,16 @@ else
 		#i.e: git config --global alias.update '!git remote update -p; git merge --ff-only @{u}'
 		if [ $update == $true ]; then
 			git update | tee -a $log_file
+		elif [ $push == $true ]; then
+			#get checked out branch
+			BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"
+			#push to remote for branch
+			git push -u $BRANCH | tee -a $log_file
 		fi
 		echo "-------------------------------" | tee -a $log_file
 	else
 		echo -e "${RED}Repository $repo does not exist!${NC}"
 		echo "Repository $repo does not exist!" >> $log_file
 	fi
-    done #<$config_file
+    done
 fi
