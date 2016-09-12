@@ -5,7 +5,7 @@
 #\ V / _` | '_| / _` | '_ \ / -_|_-<
 # \_/\__,_|_| |_\__,_|_.__/_\___/__/
 #            
-PWD=${PWD}
+PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" #${PWD}
 config_file="$PWD/repos.conf"
 log_file="$PWD/repo.log"
 DATE=$(date)
@@ -43,7 +43,7 @@ else
 		echo "$repo" | tee -a $log_file 
 		cd "${repo}"
 
-		git fetch 2&>1 | tee -a $log_file
+		git fetch | tee -a $log_file
 
 		LOCAL=$(git rev-parse @)
 		REMOTE=$(git rev-parse @{u})
