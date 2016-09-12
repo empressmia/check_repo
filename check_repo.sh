@@ -63,7 +63,7 @@ else
 		    echo -e "${ORANGE}Need to pull${NC}"
 		    echo "Need to pull" >> $log_file
 		    update=$true
-		elif [  ]; then		
+		elif [ ! $COMMITS="" ]; then		
 		#elif [ $REMOTE = $BASE ]; then
                     push=$true
 		    echo -e "${BLUE}Need to push${NC}"
