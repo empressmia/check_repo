@@ -28,9 +28,9 @@ if [ ! -e $config_file ]; then
     echo "#|_| \___| .__/\___/__/" >> $config_file
     echo "#|       |_|           " >> $config_file
     echo "#----------------------"
-    echo "#If you want a repositorie to be skipped just add '#' at the beginning of the line" >> $config_file
-    echo "#Empty lines will be skipped too, so one can structure its repository list" >> $config_file
-    echo "path/to/your/repository" >> $config_file
+    echo "#If you want a repository to be skipped just add '#' at the beginning of the line" >> $config_file
+    echo "#Empty lines will be skipped too, so one can structure its list" >> $config_file
+    echo "/full/path/to/your/repository" >> $config_file
     exit
 else
     rm -f $log_file
