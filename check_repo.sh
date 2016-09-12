@@ -53,7 +53,6 @@ else
 		LOCAL=$(git rev-parse @)
 		REMOTE=$(git rev-parse @{u})
 		BASE=$(git merge-base @ @{u})
-		COMMITS=$(git cherry -v @{u})
 
 		#check is based on: http://stackoverflow.com/a/3278427
 		if [ $LOCAL = $REMOTE ]; then
@@ -62,8 +61,7 @@ else
 		elif [ $LOCAL = $BASE ]; then
 		    echo -e "${ORANGE}Need to pull${NC}"
 		    echo "Need to pull" >> $log_file
-		    update=true
-		#elif [ -z "$COMMITS" ]; then		
+		    update=true	
 		elif [ $REMOTE = $BASE ]; then
                     push=true
 		    echo -e "${BLUE}Need to push${NC}"
