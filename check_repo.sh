@@ -43,8 +43,8 @@ else
     sed -e '/^\s*$/ d' -e '/^#/ d' $config_file | while read repo; do
         #check if folder exists
 	if [ -e $repo ]; then
-		update=$false
-		push=$false
+		update=false
+		push=false
 		echo "$repo" | tee -a $log_file 
 		cd "${repo}"
                 #fetch is needed to check if a repository has changed
@@ -62,10 +62,10 @@ else
 		elif [ $LOCAL = $BASE ]; then
 		    echo -e "${ORANGE}Need to pull${NC}"
 		    echo "Need to pull" >> $log_file
-		    update=$true
-		elif [ ! $COMMITS="" ]; then		
-		#elif [ $REMOTE = $BASE ]; then
-                    push=$true
+		    update=true
+		#elif [ -z "$COMMITS" ]; then		
+		elif [ $REMOTE = $BASE ]; then
+                    push=true
 		    echo -e "${BLUE}Need to push${NC}"
 		    echo "Need to push" >> $log_file
 		else
@@ -75,10 +75,10 @@ else
 
 		#git update is explained by http://stackoverflow.com/a/17101140
 		#i.e: git config --global alias.update '!git remote update -p; git merge --ff-only @{u}'
-		if [ "$update" = true ]; then
+		if $update ; then
 			git update | tee -a $log_file
 		fi
-		if [ "$push" = true ]; then
+		if $push ; then
 			#get checked out branch
 			BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"
 			#push to remote for branch
