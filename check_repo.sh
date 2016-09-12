@@ -13,7 +13,7 @@ DATE=$(date)
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
-BLUE='\033[0;33=4m'
+BLUE='\033[0;34m'
 NC='\033[0m'
 
 #            _      
@@ -53,6 +53,7 @@ else
 		LOCAL=$(git rev-parse @)
 		REMOTE=$(git rev-parse @{u})
 		BASE=$(git merge-base @ @{u})
+		COMMITS=$(git cherry -v @{u})
 
 		#check is based on: http://stackoverflow.com/a/3278427
 		if [ $LOCAL = $REMOTE ]; then
@@ -62,7 +63,8 @@ else
 		    echo -e "${ORANGE}Need to pull${NC}"
 		    echo "Need to pull" >> $log_file
 		    update=$true
-		elif [ $REMOTE = $BASE ]; then
+		elif [  ]; then		
+		#elif [ $REMOTE = $BASE ]; then
                     push=$true
 		    echo -e "${BLUE}Need to push${NC}"
 		    echo "Need to push" >> $log_file
@@ -73,13 +75,15 @@ else
 
 		#git update is explained by http://stackoverflow.com/a/17101140
 		#i.e: git config --global alias.update '!git remote update -p; git merge --ff-only @{u}'
-		if [ $update == $true ]; then
+		if [ "$update" = true ]; then
 			git update | tee -a $log_file
-		elif [ $push == $true ]; then
+		fi
+		if [ "$push" = true ]; then
 			#get checked out branch
 			BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"
 			#push to remote for branch
-			git push -u $BRANCH | tee -a $log_file
+			echo "Checked out branch is $BRANCH" | tee -a $log_file
+			git push -u origin $BRANCH | tee -a $log_file
 		fi
 		echo "-------------------------------" | tee -a $log_file
 	else
