@@ -41,3 +41,6 @@ See [bash](https://wiki.archlinux.org/index.php/Bash#Configuration_files) for mo
 If you have no *repos.conf* file it will create one with an example path. You have to use full paths and no abbrivations! Just enter your paths to your repos into the *repos.conf* file and it will check and update all of them if possible, i.e. if merge with fast-forward is possible. It will also push local commits to remote if there are any.
 
 A new log file is created for each run of the script so one don't get a large unreadable file for all repos named in the list. If you want an ongoing log file though just comment line 38 out ('```rm -f $log_file```').
+
+# repo_manager
+A python shell for managing your git-repostiories along with the bash script. Has autocompletion and history. More infos will come soon, stay tuned.
