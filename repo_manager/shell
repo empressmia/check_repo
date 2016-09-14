@@ -2,13 +2,28 @@
 #author: RageQuitPepe
 #shell with autocompletion w. and w/o. history is based on: https://pymotw.com/2/readline/ which was cited at: http://stackoverflow.com/a/7821956
 
+
+#  _                     _
+# (_)_ __  _ __  ___ _ _| |_ ___
+# | | '  \| '_ \/ _ \ '_|  _(_-<
+# |_|_|_|_| .__/\___/_|  \__/__/
+#         |_|
+
 import readline
 import logging
 import os
+import subprocess
+
+#   __ _ _
+#  / _(_) |___ ___
+# |  _| | / -_|_-<
+# |_| |_|_\___/__/
 
 LOG = '/tmp/log.log'
 HISTORY = '/tmp/completer.hist'
 CONFIG = '../repos.conf'
+REPO_LOG = '../repo.log'
+CHECK = '../check_repo.sh'
 logging.basicConfig(filename=LOG,level=logging.DEBUG)
 #     _
 #  __| |__ _ ______ ___ ___
@@ -74,20 +89,24 @@ class HistoryCompleter(object):
 # |_|_|_\___|\__|_||_\___/\__,_/__/
 
 def help():
-    print("          Helpscreen of repo-manager:          ")
-    print("-----------------------------------------------")
-    print("List of available commands:                  \n")
-    print(" - exit               : quits program          ")
-    print(" - addrepo    [OPTION]: adds repository to list")
-    print("                      : /full/path/to/repo     ")
-    print(" - removerepo [OPTION]: removes repo from list ")
-    print("                      : name of repo           ")
-    print(" - ignore     [OPTION]: ignore repo            ")
-    print("                      : name of repo           ")
-    print(" - list               : lists repositories   \n")
-    print("Usage examples:                                ")
-    print("addrepo /home/username/cool_project_repo       ")
-    print("ignore cool_project_repo                       ")
+    print("            Helpscreen of repo-manager:           ")
+    print("--------------------------------------------------")
+    print("List of available commands:                     \n")
+    print(" - exit               : quits program             ")
+    print(" - addrepo    [OPTION]: adds repository to list   ")
+    print("                      : /full/path/to/repo        ")
+    print(" - removerepo [OPTION]: removes repo from list    ")
+    print("                      : name of repo              ")
+    print(" - ignore     [OPTION]: ignore repo               ")
+    print("                      : name of repo              ")
+    print(" - unignore   [OPTION]: unignore repo             ")
+    print("                      : name of repo              ")
+    print(" - run                : updates repos in list     ")
+    print(" - list               : lists active repositories ")
+    print(" - showlog            : prints status log       \n")
+    print("Usage examples:                                   ")
+    print("addrepo /home/username/cool_project_repo          ")
+    print("ignore cool_project_repo                          ")
 
 def closing_message():
     print("Thanks for using the repo-manager, have a nice day!")
@@ -107,7 +126,28 @@ def list_repos():
     with open(CONFIG) as fp:
         lines = list(line for line in (l.strip() for l in fp) if line)
         for line in lines:
+            if os.path.exists(line):
+                print (line)
+
+def repo_log():
+    with open(REPO_LOG) as fp:
+        lines = list(line for line in (l.strip() for l in fp) if line)
+        for line in lines:
             print (line)
+
+def update_repos():
+     subprocess.call("./"+CHECK)
+
+def add_repo(repository):
+    if os.path.exists(repository):
+        os.chdir(repository)
+        if os.system('git rev-parse 2> /dev/null > /dev/null') == 0:
+            with open(CONFIG, 'a') as fp:
+                fp.write(repository)
+        else:
+            print("ERROR: Named directory is not a git repository!")
+    else:
+        print("ERROR: Directory does not exist!")
 
 
 def entry_loop():
@@ -115,19 +155,43 @@ def entry_loop():
         readline.read_history_file(HISTORY)
     try:
         while True:
+
             line = input('$: ')
-            if line == 'exit':
+            tokens = line.split()
+
+            if len(tokens) > 0 and len(tokens) <= 2:
+                if len(tokens) == 1:
+                    command = tokens[0]
+                    option = ''
+                if len(tokens) == 2:
+                    command = tokens[0]
+                    option = tokens[1]
+            else:
+                command = ''
+                option = ''
+
+            if command == 'exit':
                 break
-            if line == 'help':
+            if command == 'help' or command == '':
                 help()
-            if line == 'list':
+            if command == 'list':
                 list_repos()
-            if line == 'addrepo':
-                print ("$: Sorry, not yet implemented")
-            if line == 'removerepo':
+            if command == 'addrepo':
+                print("WARNING: Does not yet work properly!")
+                if option != '' :
+                    add_repo(option)
+                else:
+                    print("ERROR: No valid option given!")
+            if command == 'removerepo':
                 print("$: Sorry, not yet implemented")
-            if line == 'ignore':
+            if command == 'ignore':
                 print("$: Sorry, not yet implemented")
+            if command == 'unignore':
+                print("$: Sorry, not yet implemented")
+            if command == 'showlog':
+                repo_log()
+            if command == 'run':
+                update_repos()
 
     finally:
         readline.write_history_file(HISTORY)
@@ -139,7 +203,7 @@ def entry_loop():
 # |_|_|_\__,_|_|_||_|
 #
 start_up()
-readline.set_completer(Completer(['exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore']).complete)
+readline.set_completer(Completer(['exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'showlog', 'run']).complete)
 readline.parse_and_bind('tab: complete')
 
 entry_loop()
