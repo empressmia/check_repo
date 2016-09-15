@@ -21,9 +21,9 @@ import subprocess
 
 LOG = '/tmp/log.log'
 HISTORY = '/tmp/completer.hist'
-CONFIG = '../repos.conf'
-REPO_LOG = '../repo.log'
-CHECK = '../check_repo.sh'
+CONFIG = './repos.conf'
+REPO_LOG = './log/repo.log'
+CHECK = './check_repo.sh'
 logging.basicConfig(filename=LOG,level=logging.DEBUG)
 #     _
 #  __| |__ _ ______ ___ ___
@@ -103,6 +103,7 @@ def help():
     print("                      : name of repo              ")
     print(" - run                : updates repos in list     ")
     print(" - list               : lists active repositories ")
+    print(" - savelog            : saves current log         ")
     print(" - showlog            : prints status log       \n")
     print("Usage examples:                                   ")
     print("addrepo /home/username/cool_project_repo          ")
@@ -122,10 +123,18 @@ def start_up():
     print("by RageQuitPepe")
     print("\n")
 
+def scan_config():
+    with open(CONFIG) as fp:
+        tmp_lines = list(line for line in (l.strip() for l in fp) if line)
+    fp.close()
+    return tmp_lines
+
 def list_repos():
     with open(CONFIG) as fp:
         lines = list(line for line in (l.strip() for l in fp) if line)
         for line in lines:
+            if line.startswith("#"):
+                line = line[1:]
             if os.path.exists(line):
                 print (line)
 
@@ -139,15 +148,24 @@ def update_repos():
      subprocess.call("./"+CHECK)
 
 def add_repo(repository):
+    addRepo = True
     if os.path.exists(repository):
         os.chdir(repository)
         if os.system('git rev-parse 2> /dev/null > /dev/null') == 0:
-            with open(CONFIG, 'a') as fp:
-                fp.write(repository)
+            for line in scan_config():
+                if line.startswith("#"):
+                    line = line[1:]
+                if line == repository:
+                    print ("WARNING: Repository already added to list!")
+                    addRepo = False
         else:
             print("ERROR: Named directory is not a git repository!")
     else:
         print("ERROR: Directory does not exist!")
+    if addRepo:
+        with open(CONFIG, 'a') as fp:
+            fp.write(repository)
+        fp.close()
 
 
 def entry_loop():
@@ -190,6 +208,8 @@ def entry_loop():
                 print("$: Sorry, not yet implemented")
             if command == 'showlog':
                 repo_log()
+            if command == 'savelog':
+                print("$: Sorry, not yet implemented")
             if command == 'run':
                 update_repos()
 
@@ -202,8 +222,9 @@ def entry_loop():
 # | '  \/ _` | | ' \
 # |_|_|_\__,_|_|_||_|
 #
+
 start_up()
-readline.set_completer(Completer(['exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'showlog', 'run']).complete)
+readline.set_completer(Completer(['exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'savelog', 'showlog', 'run']).complete)
 readline.parse_and_bind('tab: complete')
 
 entry_loop()
