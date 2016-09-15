@@ -11,6 +11,7 @@
 
 import readline
 import logging
+import sys
 import os
 import subprocess
 
@@ -21,9 +22,9 @@ import subprocess
 
 LOG = '/tmp/log.log'
 HISTORY = '/tmp/completer.hist'
-CONFIG = './repos.conf'
-REPO_LOG = './log/repo.log'
-CHECK = './check_repo.sh'
+CONFIG = os.path.dirname(os.path.abspath(__file__))+'/repos.conf'
+REPO_LOG = os.path.dirname(os.path.abspath(__file__))+'/log/repo.log'
+CHECK = os.path.dirname(os.path.abspath(__file__))+'/check_repo.sh'
 logging.basicConfig(filename=LOG,level=logging.DEBUG)
 
 
