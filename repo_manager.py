@@ -11,6 +11,7 @@
 
 import readline
 import logging
+import sys
 import os
 import subprocess
 
@@ -21,9 +22,9 @@ import subprocess
 
 LOG = '/tmp/log.log'
 HISTORY = '/tmp/completer.hist'
-CONFIG = './repos.conf'
-REPO_LOG = './log/repo.log'
-CHECK = './check_repo.sh'
+CONFIG = os.path.dirname(os.path.abspath(__file__))+'/repos.conf'
+REPO_LOG = os.path.dirname(os.path.abspath(__file__))+'/log/repo.log'
+CHECK = os.path.dirname(os.path.abspath(__file__))+'/check_repo.sh'
 logging.basicConfig(filename=LOG,level=logging.DEBUG)
 
 
@@ -105,6 +106,10 @@ def help():
     print("--------------------------------------------------")
     print("List of available commands:                     \n")
     print(" - exit               : quits program             ")
+    print(" - workon     [OPTION]: work in git repository    ")
+    print("                      : name of repo              ")
+    print(" - showgraph  [OPTION]: show graph of repository  ")
+    print("                      : name of repo              ")
     print(" - addrepo    [OPTION]: adds repository to list   ")
     print("                      : /full/path/to/repo        ")
     print(" - removerepo [OPTION]: removes repo from list    ")
@@ -115,7 +120,7 @@ def help():
     print("                      : name of repo              ")
     print(" - unignore   [OPTION]: unignore repo             ")
     print("                      : name of repo              ")
-    print(" - run                : updates repos in list     ")
+    print(" - updaterepos        : updates repos in list     ")
     print(" - list               : lists active repositories ")
     print(" - savelog            : saves current log         ")
     print(" - showlog            : prints status log       \n")
@@ -152,10 +157,10 @@ def compare_dicts():
     return difference
 
 def update_config(updateConfig):
+    global REPOSITORIES
     if len(REPOSITORIES.values())>0:
         if updateConfig:
             print("WARNING: repositories have changed, updating config file!")
-            global REPOSITORIES
             with open(CONFIG, 'w') as fp:
                 fp.write("#  _ _ ___ _ __  ___ ___ \n")
                 fp.write("# | '_/ -_) '_ \/ _ (_-< \n")
@@ -211,6 +216,12 @@ def remove_repo(removeRepo):
     else:
         print("WARNING: Repository was not named in list, nothing to do...")
 
+def work_on(repo):
+    if repo in REPOSITORIES:
+        #os.system("gnome-terminal -e 'bash -c cd'" + get_path_of_repo(repo) + "'; exec bash'")
+        #subprocess.Popen(["gnome-terminal", "-e", "%s" % (get_path_of_repo(repo))])
+        subprocess.call('gnome-terminal --working-directory=' + '%s' % get_path_of_repo(repo), shell=True)
+
 def add_repo(repository):
     global REPOSITORIES
     addRepo = False
@@ -232,9 +243,9 @@ def add_repo(repository):
 def get_path_of_repo(repoName):
     global REPOSITORIES
     if repoName in REPOSITORIES:
-        print(REPOSITORIES[repoName])
+        return REPOSITORIES[repoName]
     else:
-        print("WARNING: Repository not in list!")
+        return "WARNING: Repository not in list!"
 
 def entry_loop():
     if os.path.exists(HISTORY):
@@ -258,30 +269,35 @@ def entry_loop():
 
             if command == 'exit':
                 break
-            if command == 'help' or command == '':
+            elif command == 'help' or command == '':
                 help()
-            if command == 'list':
+            elif command == 'list':
                 list_repos()
-            if command == 'addrepo':
+            elif command == 'addrepo':
                 if option != '' :
                     add_repo(option)
                 else:
                     print("ERROR: No valid option given!")
-            if command == 'removerepo':
+            elif command == 'removerepo':
                 remove_repo(option)
-            if command == 'ignore':
+            elif command == 'ignore':
                 print("$: Sorry, not yet implemented")
-            if command == 'unignore':
+            elif command == 'unignore':
                 print("$: Sorry, not yet implemented")
-            if command == 'showlog':
+            elif command == 'showlog':
                 repo_log()
-            if command == 'savelog':
+            elif command == 'savelog':
                 print("$: Sorry, not yet implemented")
-            if command == 'run':
+            elif command == 'updaterepos':
                 update_repos()
-            if command == 'getpath':
+            elif command == 'getpath':
                 if option != '':
-                    get_path_of_repo(option)
+                    print(get_path_of_repo(option))
+            elif command == 'workon':
+                if option != '':
+                    work_on(option)
+            else:
+                line = input('$: ')
 
     finally:
         readline.write_history_file(HISTORY)
@@ -293,11 +309,13 @@ def entry_loop():
 # |_|_|_\__,_|_|_||_|
 #
 
+REPOSITORIES.clear()
+ENTRY_REPO_LIST.clear()
 get_repository_list()
 ENTRY_REPO_LIST = REPOSITORIES.copy()
 
 start_up()
-readline.set_completer(Completer(['exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'savelog', 'showlog', 'run', 'getpath']).complete)
+readline.set_completer(Completer(['exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'savelog', 'showlog', 'updaterepos', 'getpath', 'workon']).complete)
 readline.parse_and_bind('tab: complete')
 
 entry_loop()
