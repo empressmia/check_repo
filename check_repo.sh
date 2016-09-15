@@ -7,7 +7,8 @@
 #            
 PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 config_file="$PWD/repos.conf"
-log_file="$PWD/repo.log"
+log_folder="$PWD/log/"
+log_file="$log_folder/repo.log"
 DATE=$(date)
 
 RED='\033[0;31m'
@@ -21,6 +22,11 @@ NC='\033[0m'
 #| '  \/ _` | | ' \ 
 #|_|_|_\__,_|_|_||_|
 #                
+
+if [ ! -d $log_folder ]; then
+    mkdir -p $log_folder
+fi
+
 if [ ! -e $config_file ]; then
     #creates template for repository list
     echo "No repo-list given!"
