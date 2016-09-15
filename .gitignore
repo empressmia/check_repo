@@ -4,3 +4,4 @@
 *.bak
 TODO.txt
 /.idea/
+/log/

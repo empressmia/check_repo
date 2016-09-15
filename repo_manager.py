@@ -207,7 +207,7 @@ def repo_log():
 
 def update_repos():
     update_config(compare_dicts())
-    subprocess.call("./"+CHECK)
+    subprocess.call(CHECK)
 
 def remove_repo(removeRepo):
     global REPOSITORIES
