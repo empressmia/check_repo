@@ -1,4 +1,6 @@
 *.conf
 *.log
+*.html
+*.bak
 TODO.txt
-/repo_manager/.idea/
+/.idea/
