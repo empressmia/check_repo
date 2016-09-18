@@ -45,12 +45,12 @@ A new log file is created for each run of the script so one don't get a large un
 # repo_manager
 A python shell for managing your git-repostiories along with the bash script. Has autocompletion and history.
 
-The shell has some commands one can list with hitting <kbd>Tab</kbd> twice, starting to type a command and hitting <kbd>Tab</kbd> once will autocomplete it.
-Major feature is adding repositories to your *repos.conf* and managing it. If you add a new repo, the list will update itself. One can the actual log and the *workon <reponame>* command will open a new terminal with your repo path as working directory. Key idea was the possibility to quickly jump between repositories named on list.
+The shell has some commands one can list with hitting <kbd>Tab</kbd> twice. Starting to type a command and hitting <kbd>Tab</kbd> once will autocomplete it.
+Major feature is adding repositories to your *repos.conf* and managing it. If you add a new repo, the list will update itself. One can save the actual log and the *workon <reponame>* command will open a new terminal with your repo path as working directory. Key idea was the possibility to quickly jump between repositories named on the list.
 
-Type *help* for all implemented commands with a short but useful description.
+Type *help* for all implemented commands with a short description.
 
-Currently the *gnome-terminal* is used to open a new terminal, using *workon*. Pleas feel free to enter the name of your terminal(-emulator) in line 222 in *repo_manager.py*. A configuration file for the shell will come by time.
+Currently the *gnome-terminal* is used to open a new terminal, using *workon*. Please feel free to enter the name of your terminal(-emulator) in line 222 in *repo_manager.py*. A configuration file for the shell will come by time.
 
 ### TODOs/Future Work
 Only commands not implemented so far are *ignore* and *unignore* for keeping repositories on the watch-list, but excluding them from any autoupdate or autopush. Also comments to the source code will be added.
