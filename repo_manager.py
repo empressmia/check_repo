@@ -11,9 +11,9 @@
 
 import readline
 import logging
-import sys
 import os
 import subprocess
+import time
 
 #   __ _ _
 #  / _(_) |___ ___
@@ -23,6 +23,7 @@ import subprocess
 LOG = '/tmp/log.log'
 HISTORY = '/tmp/completer.hist'
 CONFIG = os.path.dirname(os.path.abspath(__file__))+'/repos.conf'
+REPO_LOG_DIR = os.path.dirname(os.path.abspath(__file__))+'/log'
 REPO_LOG = os.path.dirname(os.path.abspath(__file__))+'/log/repo.log'
 CHECK = os.path.dirname(os.path.abspath(__file__))+'/check_repo.sh'
 logging.basicConfig(filename=LOG,level=logging.DEBUG)
@@ -218,8 +219,6 @@ def remove_repo(removeRepo):
 
 def work_on(repo):
     if repo in REPOSITORIES:
-        #os.system("gnome-terminal -e 'bash -c cd'" + get_path_of_repo(repo) + "'; exec bash'")
-        #subprocess.Popen(["gnome-terminal", "-e", "%s" % (get_path_of_repo(repo))])
         subprocess.call('gnome-terminal --working-directory=' + '%s' % get_path_of_repo(repo), shell=True)
 
 def add_repo(repository):
@@ -246,6 +245,12 @@ def get_path_of_repo(repoName):
         return REPOSITORIES[repoName]
     else:
         return "WARNING: Repository not in list!"
+
+def save_log():
+    if os.path.isfile(REPO_LOG):
+        subprocess.call(['cp %s %s' % (REPO_LOG, REPO_LOG_DIR+'/repo_log_'+time.strftime("%d_%m_%Y")+'.log')], shell=True)
+    else:
+        print("ERROR: No log file exists!")
 
 def entry_loop():
     if os.path.exists(HISTORY):
@@ -287,7 +292,7 @@ def entry_loop():
             elif command == 'showlog':
                 repo_log()
             elif command == 'savelog':
-                print("$: Sorry, not yet implemented")
+                save_log()
             elif command == 'updaterepos':
                 update_repos()
             elif command == 'getpath':
