@@ -1,6 +1,7 @@
 #!/usr/bin/python3.5
 #author: RageQuitPepe
 #shell with autocompletion w. and w/o. history is based on: https://pymotw.com/2/readline/ which was cited at: http://stackoverflow.com/a/7821956
+#Registering ctrl+c as exit-command is explained here: http://stackoverflow.com/a/1112350
 
 
 #  _                     _
@@ -9,6 +10,8 @@
 # |_|_|_|_| .__/\___/_|  \__/__/
 #         |_|
 
+import signal
+import sys
 import readline
 import logging
 import os
@@ -23,6 +26,7 @@ import time
 LOG = '/tmp/log.log'
 HISTORY = '/tmp/completer.hist'
 CONFIG = os.path.dirname(os.path.abspath(__file__))+'/repos.conf'
+REPOMANAGER_CONFIG = os.path.dirname(os.path.abspath(__file__))+'/repo_manager.conf'
 REPO_LOG_DIR = os.path.dirname(os.path.abspath(__file__))+'/log'
 REPO_LOG = os.path.dirname(os.path.abspath(__file__))+'/log/repo.log'
 CHECK = os.path.dirname(os.path.abspath(__file__))+'/check_repo.sh'
@@ -38,6 +42,9 @@ logging.basicConfig(filename=LOG,level=logging.DEBUG)
 
 REPOSITORIES = dict()
 ENTRY_REPO_LIST = dict()
+commands = ['exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'savelog', 'showlog', 'updaterepos', 'getpath', 'workon']
+repositories = []
+terminal = 'gnome-terminal'
 
 #     _
 #  __| |__ _ ______ ___ ___
@@ -132,6 +139,14 @@ def help():
 def closing_message():
     print("Thanks for using the repo-manager, have a nice day!")
 
+def get_repo_array():
+	global REPOSITORIES
+	global repositories
+	if len(REPOSITORIES)>0:
+		for key in REPOSITORIES.keys():
+			repositories.append(key)
+	return repositories
+
 def start_up():
     print(" _ __ ___ _ __   ___ ______ _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ")
     print("| '__/ _ \ '_ \ / _ \______| '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '__|")
@@ -177,11 +192,24 @@ def update_config(updateConfig):
 
 
 def scan_config():
-    with open(CONFIG, "r") as fp:
-        tmp_lines = list(line for line in (l.strip() for l in fp) if line)
-    fp.close()
+	tmp_lines = []
+	if os.path.isfile(CONFIG):
+		with open(CONFIG, "r") as fp:
+		    tmp_lines = list(line for line in (l.strip() for l in fp) if line)
+		fp.close()
 
-    return tmp_lines
+	else:
+		print("Repository list does not exist, creating empty template!")
+		with open(CONFIG, 'w') as fp:
+			fp.write("#  _ _ ___ _ __  ___ ___ \n")
+			fp.write("# | '_/ -_) '_ \/ _ (_-< \n")
+			fp.write("# |_| \___| .__/\___/__/ \n")
+			fp.write("#        |_|             \n")
+			fp.write("/path/to/your/repo       \n")
+		fp.close()
+
+	return tmp_lines
+		
 
 def get_repository_list():
     global REPOSITORIES
@@ -198,7 +226,7 @@ def list_repos():
         for key in REPOSITORIES.keys():
             print(key)
     else:
-        print("ERROR: Something went wrong, sorry.")
+        print("WARNING: Your repository list seems to be empty or does not have any valid paths")
 
 def repo_log():
     with open(REPO_LOG) as fp:
@@ -219,7 +247,7 @@ def remove_repo(removeRepo):
 
 def work_on(repo):
     if repo in REPOSITORIES:
-        subprocess.call('gnome-terminal --working-directory=' + '%s' % get_path_of_repo(repo), shell=True)
+        subprocess.call(terminal+' --working-directory=' + '%s' % get_path_of_repo(repo), shell=True)
 
 def add_repo(repository):
     global REPOSITORIES
@@ -252,12 +280,29 @@ def save_log():
     else:
         print("ERROR: No log file exists!")
 
+def signal_handler(signal, frame):
+	closing_message()
+	sys.exit(0)
+
+def check_repomanager_conf():
+	global terminal
+	if os.path.isfile(REPOMANAGER_CONFIG):
+		with open(REPOMANAGER_CONFIG, "r") as fp:
+			tmp_lines = list(line for line in (l.strip() for l in fp) if line)
+		fp.close()
+	
+		terminal = tmp_lines[0]
+	else:
+		with open(REPOMANAGER_CONFIG, "w") as fp:
+			fp.write(terminal+"\n")
+		fp.close
+
 def entry_loop():
     if os.path.exists(HISTORY):
         readline.read_history_file(HISTORY)
     try:
         while True:
-
+			
             line = input('$: ')
             tokens = line.split()
 
@@ -319,9 +364,12 @@ ENTRY_REPO_LIST.clear()
 get_repository_list()
 ENTRY_REPO_LIST = REPOSITORIES.copy()
 
+get_repo_array()
+check_repomanager_conf()
 start_up()
-readline.set_completer(Completer(['exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'savelog', 'showlog', 'updaterepos', 'getpath', 'workon']).complete)
+readline.set_completer(Completer(commands+repositories).complete)
 readline.parse_and_bind('tab: complete')
+signal.signal(signal.SIGINT, signal_handler)
 
 entry_loop()
 update_config(compare_dicts())
