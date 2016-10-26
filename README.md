@@ -50,7 +50,8 @@ Major feature is adding repositories to your *repos.conf* and managing it. If yo
 
 Type *help* for all implemented commands with a short description.
 
-Currently the *gnome-terminal* is used to open a new terminal, using *workon*. Please feel free to enter the name of your terminal(-emulator) in line 222 in *repo_manager.py*. A configuration file for the shell will come by time.
+##### NEW
+The `repo_manager` has now a own config-file called `repo_manger.conf` which is automatically created after a first execution. Change the first(!) line to the name of the terminal you use (important! it must be the first line - at least for now). The default one is `gnome-terminal`. Also a empty repository-list is created after the first run (which should also be a bugfix if you haven't run the shell-script first, sorry for that inconvenience).
 
 ### TODOs/Future Work
-Only commands not implemented so far are *ignore* and *unignore* for keeping repositories on the watch-list, but excluding them from any autoupdate or autopush. Also comments to the source code will be added.
+Only commands not implemented so far are *ignore* and *unignore* for keeping repositories on the watch-list, but excluding them from any autoupdate or autopush. Also comments to the source code will be added. A Makefile will be provided for setting up both scripts.
