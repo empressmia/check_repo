@@ -4,17 +4,23 @@
 
 DEST_REPOMANAGER = /usr/bin/gitmanager
 DEST_CHECKREPO = /usr/bin/checkrepo
-CURRENT_DIR = $(CURDIR)
+
+gitalias:
+	@git config --global alias.update '!git remote update -p; git merge --ff-only @{u}'
 
 install:
 	@echo "May need sudo rights to invoke!"
-	@chmod +x $(DEST_DIR) check_repo.sh
-	@chmod +x $(DEST_DIR) repo_manager.py
-	@ln -s $(CURRENT_DIR)/check_repo.sh $(DEST_CHECKREPO)
-	@ln -s $(CURRENT_DIR)/repo_manager.py $(DEST_REPOMANAGER)
+	@make gitalias
+	@chmod +x $(CURDIR) check_repo.sh
+	@chmod +x $(CURDIR) repo_manager.py
+	@ln -s $(CURDIR)/check_repo.sh $(DEST_CHECKREPO)
+	@ln -s $(CURDIR)/repo_manager.py $(DEST_REPOMANAGER)
 	@echo "Installation complete"
 
 clean:
 	@rm $(DEST_REPOMANAGER)
 	@rm $(DEST_CHECKREPO)
-	
+
+reinstall:
+	make clean
+	make install	
