@@ -13,6 +13,8 @@ gitalias:
 
 install:
 	@echo "May need sudo rights to invoke!"
+	@make gitalias
+	@make executable
 	@chmod +x $(CURDIR) check_repo.sh
 	@chmod +x $(CURDIR) repo_manager.py
 	@chmod a+x $(CURDIR) gitmanager.sh
@@ -21,5 +23,7 @@ install:
 
 clean:
 	@rm $(DEST_REPOMANAGER)
-	@rm $(CURDIR) gitmanager.sh repos.conf repo_manager.conf
+	@rm $(CURDIR)gitmanager.sh 
+	@rm $(CURDIR) repos.conf
+	@rm $(CURDIR) repo_manager.conf
 
