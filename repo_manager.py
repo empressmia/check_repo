@@ -1,4 +1,4 @@
-#!/usr/bin/python3.5
+#!/usr/bin/python
 #author: RageQuitPepe
 #shell with autocompletion w. and w/o. history is based on: https://pymotw.com/2/readline/ which was cited at: http://stackoverflow.com/a/7821956
 #Registering ctrl+c as exit-command is explained here: http://stackoverflow.com/a/1112350
@@ -26,11 +26,17 @@ import time
 LOG = '/tmp/log.log'
 HISTORY = '/tmp/completer.hist'
 CONFIG = os.path.dirname(os.path.abspath(__file__))+'/repos.conf'
+#CONFIG = os.path.dirname(os.path.abspath(__file__))
 REPOMANAGER_CONFIG = os.path.dirname(os.path.abspath(__file__))+'/repo_manager.conf'
+#REPOMANAGER_CONFIG = os.path.dirname(os.path.abspath(__file__))
 REPO_LOG_DIR = os.path.dirname(os.path.abspath(__file__))+'/log'
 REPO_LOG = os.path.dirname(os.path.abspath(__file__))+'/log/repo.log'
 CHECK = os.path.dirname(os.path.abspath(__file__))+'/check_repo.sh'
+#CHECK = os.path.dirname(os.path.abspath(__file__))
 logging.basicConfig(filename=LOG,level=logging.DEBUG)
+#LOAD_CONFIG = os.path.join(CONFIG, 'repos.conf')
+#LOAD_MANAGERCONFIG = os.path.join(REPOMANAGER_CONFIG, 'repo_manager.conf')
+#LOAD_CHECKER = os.path.join(CHECK, 'check_repo.sh')
 
 
 #       _     _          _
