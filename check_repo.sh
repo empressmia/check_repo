@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #author: RageQuitPepe
 #              _      _    _        
 #__ ____ _ _ _(_)__ _| |__| |___ ___
@@ -62,18 +62,18 @@ else
 
 		#check is based on: http://stackoverflow.com/a/3278427
 		if [ $LOCAL = $REMOTE ]; then
-		    echo "${GREEN}Up-to-date${NC}"
+		    echo -e "${GREEN}Up-to-date${NC}"
 		    echo "Up-to-date" >> $log_file
 		elif [ $LOCAL = $BASE ]; then
-		    echo "${ORANGE}Need to pull${NC}"
+		    echo -e "${ORANGE}Need to pull${NC}"
 		    echo "Need to pull" >> $log_file
 		    update=true	
 		elif [ $REMOTE = $BASE ]; then
                     push=true
-		    echo "${BLUE}Need to push${NC}"
+		    echo -e "${BLUE}Need to push${NC}"
 		    echo "Need to push" >> $log_file
 		else
-		    echo "${RED}Diverged${NC}"
+		    echo -e "${RED}Diverged${NC}"
 		    echo "Diverged" >> $log_file
 		fi
 

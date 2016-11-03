@@ -309,7 +309,7 @@ def entry_loop():
     try:
         while True:
 			
-            line = input('$: ')
+            line = raw_input('$: ')
             tokens = line.split()
 
             if len(tokens) > 0 and len(tokens) <= 2:
@@ -353,7 +353,7 @@ def entry_loop():
                 if option != '':
                     work_on(option)
             else:
-                line = input('$: ')
+                line = raw_input('$: ')
 
     finally:
         readline.write_history_file(HISTORY)
