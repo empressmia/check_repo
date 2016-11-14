@@ -309,7 +309,7 @@ def entry_loop():
     try:
         while True:
 			
-            line = raw_input('$: ')
+            line = input('$: ')
             tokens = line.split()
 
             if len(tokens) > 0 and len(tokens) <= 2:

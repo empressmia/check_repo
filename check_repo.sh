@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #author: RageQuitPepe
 #              _      _    _        
 #__ ____ _ _ _(_)__ _| |__| |___ ___
