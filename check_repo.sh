@@ -5,7 +5,7 @@
 #\ V / _` | '_| / _` | '_ \ / -_|_-<
 # \_/\__,_|_| |_\__,_|_.__/_\___/__/
 #            
-PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+#PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 config_file="$PWD/repos.conf"
 log_folder="$PWD/log/"
 log_file="$log_folder/repo.log"
