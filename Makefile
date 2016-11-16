@@ -9,7 +9,7 @@ executable:
 	@echo "#!/bin/sh" > gitmanager.sh
 	@echo "python $(CURDIR)/repo_manager.py" >> gitmanager.sh
 	@echo "#!/bin/sh" > updaterepos.sh
-	@echo "sh $(CURDIR)/check_repo.sh" >> updaterepos.sh
+	@echo "cd $(CURDIR) && sh check_repo.sh" >> updaterepos.sh
 
 gitalias:
 	@git config --global alias.update '!git remote update -p; git merge --ff-only @{u}'
