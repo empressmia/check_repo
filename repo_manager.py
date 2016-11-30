@@ -2,6 +2,7 @@
 #author: RageQuitPepe
 #shell with autocompletion w. and w/o. history is based on: https://pymotw.com/2/readline/ which was cited at: http://stackoverflow.com/a/7821956
 #Registering ctrl+c as exit-command is explained here: http://stackoverflow.com/a/1112350
+#pretty git-graph is from http://stackoverflow.com/a/34467298
 
 
 #  _                     _
@@ -48,7 +49,7 @@ logging.basicConfig(filename=LOG,level=logging.DEBUG)
 
 REPOSITORIES = dict()
 ENTRY_REPO_LIST = dict()
-commands = ['exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'savelog', 'showlog', 'updaterepos', 'getpath', 'workon']
+commands = ['gitlog', 'exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'savelog', 'showlog', 'updaterepos', 'getpath', 'workon']
 repositories = []
 terminal = 'gnome-terminal'
 
@@ -121,6 +122,8 @@ def help():
     print("List of available commands:                     \n")
     print(" - exit               : quits program             ")
     print(" - workon     [OPTION]: work in git repository    ")
+    print("                      : name of repo              ")
+    print(" - gitlog     [OPTION]: show log of repository    ")
     print("                      : name of repo              ")
     print(" - showgraph  [OPTION]: show graph of repository  ")
     print("                      : name of repo              ")
@@ -242,7 +245,7 @@ def repo_log():
 
 def update_repos():
     update_config(compare_dicts())
-    subprocess.call(CHECK)
+    subprocess.call(['updaterepos'])
 
 def remove_repo(removeRepo):
     global REPOSITORIES
@@ -303,6 +306,16 @@ def check_repomanager_conf():
 			fp.write(terminal+"\n")
 		fp.close
 
+
+def git_log(repo):
+    global REPOSITORIES
+    if(repo in REPOSITORIES):
+        os.chdir(get_path_of_repo(repo))
+        subprocess.call(['git lg'], shell=True)
+    else:
+        return "WARNING: Repository not in list!"
+
+
 def entry_loop():
     if os.path.exists(HISTORY):
         readline.read_history_file(HISTORY)
@@ -342,6 +355,11 @@ def entry_loop():
                 print("$: Sorry, not yet implemented")
             elif command == 'showlog':
                 repo_log()
+            elif command == 'gitlog':
+                if(option != ''):
+                    git_log(option)
+                else:
+                    print("ERROR: No valid option given")
             elif command == 'savelog':
                 save_log()
             elif command == 'updaterepos':
@@ -353,7 +371,7 @@ def entry_loop():
                 if option != '':
                     work_on(option)
             else:
-                line = raw_input('$: ')
+                line = input('$: ')
 
     finally:
         readline.write_history_file(HISTORY)
