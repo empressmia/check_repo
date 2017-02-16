@@ -12,10 +12,14 @@ executable:
 	@echo "cd $(CURDIR) && sh check_repo.sh" >> updaterepos.sh
 
 gitaliases:
-	@git config --global alias.update '!git remote update -p; git merge --ff-only @{u}'
-	@git config --global alias.lg = '!"git lg2"'
-	@git config --global alias.lg2 = '!"git lg2-specific --all"'
-	@git config --global alias.lg2-specific = 'log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)''
+	@git config --global alias.update '!git remote update -p; git merge --ff-only @\{u\}'
+	@git config --global alias.lg '!git lg1'
+	@git config --global alias.lg1 '!git lg1-specific --all'
+	@git config --global alias.lg2 '!git lg2-specific --all'
+	@git config --global alias.lg3 '!git lg3-specific --all'
+	@git config --global alias.lg1-specific "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'"
+	@git config --global alias.lg2-specific "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'"
+	@git config --global alias.lg3-specific "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'"
 
 install:
 	@echo "May need sudo rights to invoke!"
