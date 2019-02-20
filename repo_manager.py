@@ -85,7 +85,7 @@ class Completer(object):
                       repr(text), state, repr(response))
         return response
 
-
+# function parses history-file
 def get_history_items():
     return [readline.get_history_item(i)
             for i in range(1, readline.get_current_history_length() + 1)
@@ -122,6 +122,7 @@ class HistoryCompleter(object):
 # | '  \/ -_)  _| ' \/ _ \/ _` (_-<
 # |_|_|_\___|\__|_||_\___/\__,_/__/
 
+# prints helpscreen
 def help():
     print("            Helpscreen of repo-manager:           ")
     print("--------------------------------------------------")
@@ -152,10 +153,11 @@ def help():
     print("ignore cool_project_repo                          ")
 
 
+#prints a warming closing message
 def closing_message():
     print("Thanks for using the repo-manager, have a nice day!")
 
-
+#creates array by parsing the repos-list file
 def get_repo_array():
     global REPOSITORIES
     global repositories
@@ -165,6 +167,7 @@ def get_repo_array():
     return repositories
 
 
+#prints warming welcome message
 def start_up():
     print(" _ __ ___ _ __   ___ ______ _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ")
     print("| '__/ _ \ '_ \ / _ \______| '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '__|")
@@ -173,10 +176,10 @@ def start_up():
     print("         | |                                             __/ |          ")
     print("         |_|                                            |___/           ")
     print("\n")
-    print("by RageQuitPepe")
+    print("by rapnis")
     print("\n")
 
-
+#function checks if a new repo has been added and updates repos-list file
 def compare_dicts():
     global REPOSITORIES
     global ENTRY_REPO_LIST
@@ -193,7 +196,7 @@ def compare_dicts():
 
     return difference
 
-
+#function updates configuration file
 def update_config(updateConfig):
     global REPOSITORIES
     if len(REPOSITORIES.values()) > 0:
@@ -212,7 +215,7 @@ def update_config(updateConfig):
     else:
         print("ERROR: Repositories have changed but something went wrong... not udpating list!")
 
-
+#function parses config file
 def scan_config():
     tmp_lines = []
     if os.path.isfile(CONFIG):
@@ -232,7 +235,7 @@ def scan_config():
 
     return tmp_lines
 
-
+#funcion parses repos-list file
 def get_repository_list():
     global REPOSITORIES
     repoList = scan_config()
@@ -242,7 +245,7 @@ def get_repository_list():
         if os.path.exists(repo):
             REPOSITORIES[os.path.basename(os.path.normpath(repo))] = repo
 
-
+#function extracts repos that had been read out from file
 def list_repos():
     global REPOSITORIES
     if len(REPOSITORIES.keys()) > 0:
@@ -251,14 +254,14 @@ def list_repos():
     else:
         print("WARNING: Your repository list seems to be empty or does not have any valid paths")
 
-
+#function writes the log of updating repos to file
 def repo_log():
     with open(REPO_LOG) as fp:
         lines = list(line for line in (l.strip() for l in fp) if line)
         for line in lines:
             print(line)
 
-
+#function performs repo update with merge
 def update_repos():
     update_config(compare_dicts())
     subprocess.call(['updaterepos'])
@@ -271,7 +274,7 @@ def remove_repo(removeRepo):
     else:
         print("WARNING: Repository was not named in list, nothing to do...")
 
-
+#function opens a terminal in a new window with given working directory
 def work_on(repo):
     if repo in REPOSITORIES:
 	if terminal == 'gnome-terminal':
@@ -279,7 +282,7 @@ def work_on(repo):
 	elif terminal == 'konsole':
 	    subprocess.call(terminal + ' --workdir ' + '%s' % get_path_of_repo(repo), shell=True)
 
-
+#adds a repo to the watch list
 def add_repo(repository):
     global REPOSITORIES
     addRepo = False
@@ -298,7 +301,7 @@ def add_repo(repository):
     if addRepo:
         REPOSITORIES[os.path.basename(os.path.normpath(repository))] = repository
 
-
+#function retrives the full path of a repo in the watchlist
 def get_path_of_repo(repoName):
     global REPOSITORIES
     if repoName in REPOSITORIES:
@@ -306,7 +309,7 @@ def get_path_of_repo(repoName):
     else:
         return "WARNING: Repository not in list!"
 
-
+#saves log to file
 def save_log():
     if os.path.isfile(REPO_LOG):
         subprocess.call(['cp %s %s' % (REPO_LOG, REPO_LOG_DIR + '/repo_log_' + time.strftime("%d_%m_%Y") + '.log')],
@@ -319,7 +322,7 @@ def signal_handler(signal, frame):
     closing_message()
     sys.exit(0)
 
-
+#checks the configuration file of the main program
 def check_repomanager_conf():
     global terminal
     if os.path.isfile(REPOMANAGER_CONFIG):
@@ -333,7 +336,7 @@ def check_repomanager_conf():
             fp.write(terminal + "\n")
         fp.close()
 
-
+#function prints the log of a repo to the screen
 def git_log(repo):
     global REPOSITORIES
     if (repo in REPOSITORIES):
@@ -342,12 +345,14 @@ def git_log(repo):
     else:
         return "WARNING: Repository not in list!"
 
+#function determines which line parsing method has to be used according to python version used
 def parse_input():
     if VERSION[0] == 2:
 	return raw_input('$: ')
     else:
 	return input('$: ')
 
+# 'main' routine of the program... endless loop;
 def entry_loop():
     if os.path.exists(HISTORY):
         readline.read_history_file(HISTORY)
