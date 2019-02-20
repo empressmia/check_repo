@@ -29,8 +29,8 @@ install:
 	@chmod +x $(CURDIR) repo_manager.py
 	@chmod a+x $(CURDIR) gitmanager.sh
 	@chmod a+x $(CURDIR) updaterepos.sh
-	@cp -p $(CURDIR)/gitmanager.sh $(DEST_REPOMANAGER)
-	@cp -p $(CURDIR)/updaterepos.sh $(DEST_UPDATEREPOS)
+	@ln -sf $(CURDIR)/gitmanager.sh $(DEST_REPOMANAGER)
+	@ln -sf $(CURDIR)/updaterepos.sh $(DEST_UPDATEREPOS)
 	@echo "Installation complete"
 
 clean:
