@@ -53,7 +53,7 @@ ENTRY_REPO_LIST = dict()
 commands = ['gitlog', 'exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'savelog', 'showlog',
             'updaterepos', 'getpath', 'workon']
 repositories = []
-terminal = 'gnome-terminal'
+terminal = 'konsole'
 
 
 #     _
@@ -274,7 +274,10 @@ def remove_repo(removeRepo):
 
 def work_on(repo):
     if repo in REPOSITORIES:
-        subprocess.call(terminal + ' --working-directory=' + '%s' % get_path_of_repo(repo), shell=True)
+	if terminal == 'gnome-terminal':
+            subprocess.call(terminal + ' --working-directory=' + '%s' % get_path_of_repo(repo), shell=True)
+	elif terminal == 'konsole':
+	    subprocess.call(terminal + ' --workdir ' + '%s' % get_path_of_repo(repo), shell=True)
 
 
 def add_repo(repository):
