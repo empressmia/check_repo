@@ -24,6 +24,7 @@ import time
 # |  _| | / -_|_-<
 # |_| |_|_\___/__/
 
+VERSION = sys.version_info
 LOG = '/tmp/log.log'
 HISTORY = '/tmp/completer.hist'
 CONFIG = os.path.dirname(os.path.abspath(__file__)) + '/repos.conf'
@@ -338,6 +339,11 @@ def git_log(repo):
     else:
         return "WARNING: Repository not in list!"
 
+def parse_input():
+    if VERSION[0] == 2:
+	return raw_input('$: ')
+    else:
+	return input('$: ')
 
 def entry_loop():
     if os.path.exists(HISTORY):
@@ -345,7 +351,7 @@ def entry_loop():
     try:
         while True:
 
-            line = input('$: ')
+            line = parse_input()
             tokens = line.split()
 
             if len(tokens) > 0 and len(tokens) <= 2:
