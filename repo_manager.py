@@ -277,10 +277,11 @@ def remove_repo(removeRepo):
 #function opens a terminal in a new window with given working directory
 def work_on(repo):
     if repo in REPOSITORIES:
-	if terminal == 'gnome-terminal':
+        if terminal == 'gnome-terminal':
             subprocess.call(terminal + ' --working-directory=' + '%s' % get_path_of_repo(repo), shell=True)
-	elif terminal == 'konsole':
-	    subprocess.call(terminal + ' --workdir ' + '%s' % get_path_of_repo(repo), shell=True)
+        elif terminal == 'konsole':
+            subprocess.call(terminal + ' --workdir ' + '%s' % get_path_of_repo(repo), shell=True)
+
 
 #adds a repo to the watch list
 def add_repo(repository):
@@ -348,9 +349,9 @@ def git_log(repo):
 #function determines which line parsing method has to be used according to python version used
 def parse_input():
     if VERSION[0] == 2:
-	return raw_input('$: ')
+        return raw_input('$: ')
     else:
-	return input('$: ')
+        return input('$: ')
 
 # 'main' routine of the program... endless loop;
 def entry_loop():
