@@ -132,8 +132,6 @@ def help():
     print("                      : name of repo              ")
     print(" - gitlog     [OPTION]: show log of repository    ")
     print("                      : name of repo              ")
-    print(" - showgraph  [OPTION]: show graph of repository  ")
-    print("                      : name of repo              ")
     print(" - addrepo    [OPTION]: adds repository to list   ")
     print("                      : /full/path/to/repo        ")
     print(" - removerepo [OPTION]: removes repo from list    ")
