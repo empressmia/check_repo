@@ -275,7 +275,7 @@ def remove_repo(removeRepo):
 #function opens a terminal in a new window with given working directory
 def work_on(repo):
     if repo in REPOSITORIES:
-        if terminal == 'gnome-terminal':
+        if terminal == 'gnome-terminal' or terminal == 'lxterminal' or terminal == 'terminator':
             subprocess.call(terminal + ' --working-directory=' + '%s' % get_path_of_repo(repo), shell=True)
         elif terminal == 'konsole':
             subprocess.call(terminal + ' --workdir ' + '%s' % get_path_of_repo(repo), shell=True)
