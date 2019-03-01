@@ -49,7 +49,6 @@ else
     sed -e '/^\s*$/ d' -e '/^#/ d' $config_file | while read repo; do
 	ignore=false
 	if [[ ${repo:0:1} == "*" ]]; then
-	    echo "repo should be ignored"
 	    ignore=true
 	    temp=${repo#?}
 	    repo=$temp
