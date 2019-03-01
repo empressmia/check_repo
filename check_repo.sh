@@ -47,6 +47,13 @@ else
     echo "-------------------------------" | tee -a $log_file
     #skip blank lines and lines starting with '#'
     sed -e '/^\s*$/ d' -e '/^#/ d' $config_file | while read repo; do
+	ignore=false
+	if [[ ${repo:0:1} == "*" ]]; then
+	    echo "repo should be ignored"
+	    ignore=true
+	    temp=${repo#?}
+	    repo=$temp
+	fi
         #check if folder exists
 	if [ -e $repo ]; then
 		update=false
@@ -79,15 +86,18 @@ else
 
 		#git update is explained by http://stackoverflow.com/a/17101140
 		#i.e: git config --global alias.update '!git remote update -p; git merge --ff-only @{u}'
-		if $update ; then
-			git update | tee -a $log_file
+		if [[ $update && $ignore==false ]]; then
+		    git update | tee -a $log_file
+		else
+		   echo -e "${ORANGE}Repository is ignored, though it could be updated${NC}"
+		   echo "Repository is ignored, though it could be updated" >> $log_file
 		fi
 		if $push ; then
-			#get checked out branch
-			BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"
-			#push to remote for branch
-			echo "Checked out branch is $BRANCH" | tee -a $log_file
-			git push -u origin $BRANCH | tee -a $log_file
+		    #get checked out branch
+		    BRANCH="$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"
+		    #push to remote for branch
+		    echo "Checked out branch is $BRANCH" | tee -a $log_file
+		    git push -u origin $BRANCH | tee -a $log_file
 		fi
 		echo "-------------------------------" | tee -a $log_file
 	else
