@@ -51,7 +51,7 @@ logging.basicConfig(filename=LOG, level=logging.DEBUG)
 REPOSITORIES = dict()
 ENTRY_REPO_LIST = dict()
 commands = ['gitlog', 'exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'savelog', 'showlog',
-            'updaterepos', 'getpath', 'workon']
+            'updaterepos', 'getpath', 'workon', 'quit']
 repositories = []
 terminal = 'konsole'
 
@@ -372,7 +372,7 @@ def entry_loop():
                 command = ''
                 option = ''
 
-            if command == 'exit':
+            if command == 'exit' or command == 'quit':
                 break
             elif command == 'help' or command == '':
                 help()
