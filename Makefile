@@ -2,12 +2,14 @@
 # repo-management install Makefile
 #
 
-DEST_REPOMANAGER = /usr/local/bin/gitmanager
-DEST_UPDATEREPOS = /usr/local/bin/updaterepos
+#DEST_REPOMANAGER = /usr/local/bin/gitmanager
+DEST_REPOMANAGER = $(HOME)/bin/repomanager
+#DEST_UPDATEREPOS = /usr/local/bin/updaterepos
+DEST_UPDATEREPOS = $(HOME)/bin/checkrepos
 
 executable:
 	@echo "#!/bin/sh" > gitmanager.sh
-	@echo "python $(CURDIR)/repo_manager.py" >> gitmanager.sh
+	@echo "python3 $(CURDIR)/repo_manager.py" >> gitmanager.sh
 	@echo "#!/bin/sh" > updaterepos.sh
 	@echo "cd $(CURDIR) && sh check_repo.sh" >> updaterepos.sh
 
@@ -22,9 +24,9 @@ gitaliases:
 	@git config --global alias.lg3-specific "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'"
 
 install:
-	@echo "May need sudo rights to invoke!"
 	@make gitaliases
 	@make executable
+	@mkdir -p $(HOME)/.config/repomanager
 	@chmod +x $(CURDIR) check_repo.sh
 	@chmod +x $(CURDIR) repo_manager.py
 	@chmod a+x $(CURDIR) gitmanager.sh
