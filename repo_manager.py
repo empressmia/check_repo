@@ -27,18 +27,12 @@ import time
 VERSION = sys.version_info
 LOG = '/tmp/log.log'
 HISTORY = '/tmp/completer.hist'
-CONFIG = os.path.dirname(os.path.abspath(__file__)) + '/repos.conf'
-# CONFIG = os.path.dirname(os.path.abspath(__file__))
-REPOMANAGER_CONFIG = os.path.dirname(os.path.abspath(__file__)) + '/repo_manager.conf'
-# REPOMANAGER_CONFIG = os.path.dirname(os.path.abspath(__file__))
-REPO_LOG_DIR = os.path.dirname(os.path.abspath(__file__)) + '/log'
-REPO_LOG = os.path.dirname(os.path.abspath(__file__)) + '/log/repo.log'
-CHECK = os.path.dirname(os.path.abspath(__file__)) + '/check_repo.sh'
-# CHECK = os.path.dirname(os.path.abspath(__file__))
+CONFIG = os.environ['HOME'] + '/.config/repomanager/repos.conf'
+REPOMANAGER_CONFIG = os.environ['HOME'] + '/repo_manager.conf'
+REPO_LOG_DIR = '/tmp/' + '/log'
+REPO_LOG = REPO_LOG_DIR + '/repo.log'
+
 logging.basicConfig(filename=LOG, level=logging.DEBUG)
-# LOAD_CONFIG = os.path.join(CONFIG, 'repos.conf')
-# LOAD_MANAGERCONFIG = os.path.join(REPOMANAGER_CONFIG, 'repo_manager.conf')
-# LOAD_CHECKER = os.path.join(CHECK, 'check_repo.sh')
 
 
 #       _     _          _
