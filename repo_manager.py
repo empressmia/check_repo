@@ -256,7 +256,7 @@ def repo_log():
 #function performs repo update with merge
 def update_repos():
     update_config(compare_dicts())
-    subprocess.call(['updaterepos'])
+    subprocess.run(['checkrepos'])
 
 
 def remove_repo(removeRepo):
@@ -334,7 +334,7 @@ def git_log(repo):
     global REPOSITORIES
     if (repo in REPOSITORIES):
         os.chdir(get_path_of_repo(repo))
-        subprocess.call(['git lg'], shell=True)
+        subprocess.call(['git log'], shell=True)
     else:
         return "WARNING: Repository not in list!"
 
