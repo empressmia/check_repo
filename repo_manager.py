@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # author: RageQuitPepe
 # shell with autocompletion w. and w/o. history is based on: https://pymotw.com/2/readline/ which was cited at: http://stackoverflow.com/a/7821956
 # Registering ctrl+c as exit-command is explained here: http://stackoverflow.com/a/1112350
@@ -420,19 +420,20 @@ def entry_loop():
 # | '  \/ _` | | ' \
 # |_|_|_\__,_|_|_||_|
 #
+if __name__ == "__main__":
+    REPOSITORIES.clear()
+    ENTRY_REPO_LIST.clear()
+    get_repository_list()
+    ENTRY_REPO_LIST = REPOSITORIES.copy()
 
-REPOSITORIES.clear()
-ENTRY_REPO_LIST.clear()
-get_repository_list()
-ENTRY_REPO_LIST = REPOSITORIES.copy()
+    get_repo_array()
+    check_repomanager_conf()
+    start_up()
+    readline.set_completer(Completer(commands + repositories).complete)
+    readline.parse_and_bind('tab: complete')
+    signal.signal(signal.SIGINT, signal_handler)
 
-get_repo_array()
-check_repomanager_conf()
-start_up()
-readline.set_completer(Completer(commands + repositories).complete)
-readline.parse_and_bind('tab: complete')
-signal.signal(signal.SIGINT, signal_handler)
+    entry_loop()
+    update_config(compare_dicts())
+    closing_message()
 
-entry_loop()
-update_config(compare_dicts())
-closing_message()
