@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # author: RageQuitPepe
 # shell with autocompletion w. and w/o. history is based on: https://pymotw.com/2/readline/ which was cited at: http://stackoverflow.com/a/7821956
 # Registering ctrl+c as exit-command is explained here: http://stackoverflow.com/a/1112350
@@ -27,18 +27,12 @@ import time
 VERSION = sys.version_info
 LOG = '/tmp/log.log'
 HISTORY = '/tmp/completer.hist'
-CONFIG = os.path.dirname(os.path.abspath(__file__)) + '/repos.conf'
-# CONFIG = os.path.dirname(os.path.abspath(__file__))
-REPOMANAGER_CONFIG = os.path.dirname(os.path.abspath(__file__)) + '/repo_manager.conf'
-# REPOMANAGER_CONFIG = os.path.dirname(os.path.abspath(__file__))
-REPO_LOG_DIR = os.path.dirname(os.path.abspath(__file__)) + '/log'
-REPO_LOG = os.path.dirname(os.path.abspath(__file__)) + '/log/repo.log'
-CHECK = os.path.dirname(os.path.abspath(__file__)) + '/check_repo.sh'
-# CHECK = os.path.dirname(os.path.abspath(__file__))
+CONFIG = os.environ['HOME'] + '/.config/repomanager/repos.conf'
+REPOMANAGER_CONFIG = os.environ['HOME'] + '/repo_manager.conf'
+REPO_LOG_DIR = '/tmp/' + '/log'
+REPO_LOG = REPO_LOG_DIR + '/repo.log'
+
 logging.basicConfig(filename=LOG, level=logging.DEBUG)
-# LOAD_CONFIG = os.path.join(CONFIG, 'repos.conf')
-# LOAD_MANAGERCONFIG = os.path.join(REPOMANAGER_CONFIG, 'repo_manager.conf')
-# LOAD_CHECKER = os.path.join(CHECK, 'check_repo.sh')
 
 
 #       _     _          _
@@ -51,7 +45,7 @@ logging.basicConfig(filename=LOG, level=logging.DEBUG)
 REPOSITORIES = dict()
 ENTRY_REPO_LIST = dict()
 commands = ['gitlog', 'exit', 'help', 'list', 'addrepo', 'removerepo', 'ignore', 'unignore', 'savelog', 'showlog',
-            'updaterepos', 'getpath', 'workon']
+            'updaterepos', 'getpath', 'workon', 'quit']
 repositories = []
 terminal = 'konsole'
 
@@ -262,7 +256,7 @@ def repo_log():
 #function performs repo update with merge
 def update_repos():
     update_config(compare_dicts())
-    subprocess.call(['updaterepos'])
+    subprocess.run(['checkrepos'])
 
 
 def remove_repo(removeRepo):
@@ -275,7 +269,7 @@ def remove_repo(removeRepo):
 #function opens a terminal in a new window with given working directory
 def work_on(repo):
     if repo in REPOSITORIES:
-        if terminal == 'gnome-terminal':
+        if terminal == 'gnome-terminal' or terminal == 'lxterminal' or terminal == 'terminator':
             subprocess.call(terminal + ' --working-directory=' + '%s' % get_path_of_repo(repo), shell=True)
         elif terminal == 'konsole':
             subprocess.call(terminal + ' --workdir ' + '%s' % get_path_of_repo(repo), shell=True)
@@ -340,7 +334,7 @@ def git_log(repo):
     global REPOSITORIES
     if (repo in REPOSITORIES):
         os.chdir(get_path_of_repo(repo))
-        subprocess.call(['git lg'], shell=True)
+        subprocess.call(['git log'], shell=True)
     else:
         return "WARNING: Repository not in list!"
 
@@ -372,7 +366,7 @@ def entry_loop():
                 command = ''
                 option = ''
 
-            if command == 'exit':
+            if command == 'exit' or command == 'quit':
                 break
             elif command == 'help' or command == '':
                 help()
@@ -420,19 +414,20 @@ def entry_loop():
 # | '  \/ _` | | ' \
 # |_|_|_\__,_|_|_||_|
 #
+if __name__ == "__main__":
+    REPOSITORIES.clear()
+    ENTRY_REPO_LIST.clear()
+    get_repository_list()
+    ENTRY_REPO_LIST = REPOSITORIES.copy()
 
-REPOSITORIES.clear()
-ENTRY_REPO_LIST.clear()
-get_repository_list()
-ENTRY_REPO_LIST = REPOSITORIES.copy()
+    get_repo_array()
+    check_repomanager_conf()
+    start_up()
+    readline.set_completer(Completer(commands + repositories).complete)
+    readline.parse_and_bind('tab: complete')
+    signal.signal(signal.SIGINT, signal_handler)
 
-get_repo_array()
-check_repomanager_conf()
-start_up()
-readline.set_completer(Completer(commands + repositories).complete)
-readline.parse_and_bind('tab: complete')
-signal.signal(signal.SIGINT, signal_handler)
+    entry_loop()
+    update_config(compare_dicts())
+    closing_message()
 
-entry_loop()
-update_config(compare_dicts())
-closing_message()
