@@ -168,7 +168,7 @@ def start_up():
     print("         | |                                             __/ |          ")
     print("         |_|                                            |___/           ")
     print("\n")
-    print("by rapnis")
+    print("by rapnis, Empress Mia")
     print("\n")
 
 #function checks if a new repo has been added and updates repos-list file
@@ -279,10 +279,12 @@ def work_on(repo):
 def add_repo(repository):
     global REPOSITORIES
     addRepo = False
-    if os.path.exists(repository):
-        os.chdir(repository)
+    repopath = os.path.abspath(os.path.expanduser(os.path.expandvars(repository)))
+    print("adding repsoitory path to list: ", repopath)
+    if os.path.exists(repopath):
+        os.chdir(repopath)
         if os.system('git rev-parse 2> /dev/null > /dev/null') == 0:
-            if not os.path.basename(os.path.normpath(repository)) in REPOSITORIES:
+            if not os.path.basename(os.path.normpath(repopath)) in REPOSITORIES:
                 addRepo = True
             else:
                 print("WARNING: Repository already added to list!")
@@ -292,7 +294,7 @@ def add_repo(repository):
         print("ERROR: Directory does not exist!")
 
     if addRepo:
-        REPOSITORIES[os.path.basename(os.path.normpath(repository))] = repository
+        REPOSITORIES[os.path.basename(os.path.normpath(repopath))] = repopath
 
 #function retrives the full path of a repo in the watchlist
 def get_path_of_repo(repoName):
