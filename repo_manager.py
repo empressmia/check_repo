@@ -18,6 +18,7 @@ import logging
 import os
 import subprocess
 import time
+import toml
 
 #   __ _ _
 #  / _(_) |___ ___
@@ -28,7 +29,8 @@ VERSION = sys.version_info
 LOG = '/tmp/log.log'
 HISTORY = '/tmp/completer.hist'
 CONFIG = os.environ['HOME'] + '/.config/repomanager/repos.conf'
-REPOMANAGER_CONFIG = os.environ['HOME'] + '/repo_manager.conf'
+REPOMANAGER_CONFIG = os.environ['HOME'] + '/.config/repomanager/repo_manager.conf'
+REPOMANAGER_TOML = os.environ['HOME'] + '/.config/repomanager/repo_manager.toml'
 REPO_LOG_DIR = '/tmp/' + '/log'
 REPO_LOG = REPO_LOG_DIR + '/repo.log'
 
@@ -318,18 +320,39 @@ def signal_handler(signal, frame):
     sys.exit(0)
 
 #checks the configuration file of the main program
+#legacy/obsolete function
 def check_repomanager_conf():
     global terminal
     if os.path.isfile(REPOMANAGER_CONFIG):
         with open(REPOMANAGER_CONFIG, "r") as fp:
             tmp_lines = list(line for line in (l.strip() for l in fp) if line)
         fp.close()
-
         terminal = tmp_lines[0]
     else:
         with open(REPOMANAGER_CONFIG, "w") as fp:
             fp.write(terminal + "\n")
         fp.close()
+
+#checks the configuration file of the main program
+def check_repomanager_toml():
+    global terminal
+    try:
+        if os.path.isfile(REPOMANAGER_TOML):
+            with open(REPOMANAGER_TOML, 'r') as fp:
+                config = toml.load(fp)
+            fp.close()
+            terminal = config['general']['terminal']
+        else:
+            with open(REPOMANAGER_TOML, "w") as fp:
+                config = {
+                    "general": {
+                        "terminal": str(terminal) 
+                    }
+                }
+                toml.dump(config, fp)
+            fp.close()
+    except:
+        sys.exit("error occurred when reading config file!")
 
 #function prints the log of a repo to the screen
 def git_log(repo):
@@ -423,7 +446,7 @@ if __name__ == "__main__":
     ENTRY_REPO_LIST = REPOSITORIES.copy()
 
     get_repo_array()
-    check_repomanager_conf()
+    check_repomanager_toml()
     start_up()
     readline.set_completer(Completer(commands + repositories).complete)
     readline.parse_and_bind('tab: complete')
