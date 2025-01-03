@@ -4,22 +4,7 @@ The Python-script lets you manage the shell-script so that one can add new repos
 
 ## Installation
 Just run `make install` and the Makefile will create executable copies to the scripts in this git repository as *gitmanager* and as *updterepos*. Both scripts are then systemwide callable. The needed git-alias for the shell-script is also set using the Makefile.
-To set up your terminal for the *gitmanager*, edit the *repo_manager.conf* and enter the name of your terminal on the first line (See descriptions at section *repo_manager*).
-
-## Usage (outdated)
-Uses own git alias! First type 
-
-```bash
-git config --global alias.update '!git remote update -p; git merge --ff-only @{u}'
-```
- 
-into your terminal and hit enter. The command 
-```bash
-git update
-``` 
-is explained by and used from [stackoverflow](http://stackoverflow.com/a/17101140).
-Then make sure the script is executable by running ```chmod a+x check_repo.sh``` and run it with ```./check_repo.sh```.
-The following sections describe how to get a simpler usage for the script.
+To set up your terminal for the *gitmanager*, edit the *repo_manager.toml* and enter the name of your terminal emulator (See descriptions at section *repo_manager*).
 
 ### Crontab
 USE AT YOUR OWN RISK!
@@ -29,18 +14,6 @@ To run the shell-script as a cron service at start up, add
 ```
  to your crontab with typing ```crontab -e``` in your terminal.
 For users using *archlinux* check [cron](https://wiki.archlinux.org/index.php/Cron) due to installation of cron services.
-
-### Shell Alias (outdated)
-USE AT YOUR OWN RISK!
-To run it as a shell command for the current user add a new alias to your *.bashrc* with ```sudo vim .bashrc```. Enter: 
-
-```bash
-alias checkrepos='/path/to/your/repo/check_repo/check_repo.sh'
-```
-Save and exit and source your bash file with ```. .bashrc``` or ```source .bashrc```
-
-The script then can be called with ```checkrepos``` under the current user.
-See [bash](https://wiki.archlinux.org/index.php/Bash#Configuration_files) for more information.
 
 ## Remarks
 If you have no *repos.conf* file it will create one with an example path. You have to use full paths and no abbreviations! Just enter your paths to your repos into the *repos.conf* file and it will check and update all of them if possible, i.e. if merge with fast-forward is possible. It will also push local commits to remote if there are any.
@@ -56,9 +29,8 @@ Major feature is adding repositories to your *repos.conf* and managing it. If yo
 Type *help* for all implemented commands with a short description.
 
 ##### NEW
-The `repo_manager` has now a own config-file called `repo_manger.conf` which is automatically
-created after a first execution. Change the first(!) line to the name of the terminal you use
-(important! it must be the first line - at least for now). The default one is `gnome-terminal`. Also
+The `repo_manager` has now a own config-file called `repo_manger.toml` which is automatically
+created after a first execution. Change the value for keyword `terminal` to the name of the terminal emulator you use. The default one is `konsole`. Also
 an empty repository-list is created after the first run (which should also be a bugfix if you haven't run the shell-script first, sorry for that inconvenience).
 
 ### TODOs/Future Work
