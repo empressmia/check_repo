@@ -1,5 +1,5 @@
 #!/bin/sh
-#author: RageQuitPepe
+#authors: rapnis, Empress Mia 
 #              _      _    _        
 #__ ____ _ _ _(_)__ _| |__| |___ ___
 #\ V / _` | '_| / _` | '_ \ / -_|_-<
