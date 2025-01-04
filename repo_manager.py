@@ -18,7 +18,12 @@ import logging
 import os
 import subprocess
 import time
-import toml
+
+try:
+    import toml
+    toml_found = True
+except ImportError as err:
+    toml_found = False
 
 #   __ _ _
 #  / _(_) |___ ___
@@ -444,9 +449,13 @@ if __name__ == "__main__":
     ENTRY_REPO_LIST.clear()
     get_repository_list()
     ENTRY_REPO_LIST = REPOSITORIES.copy()
-
     get_repo_array()
-    check_repomanager_toml()
+
+    if toml_found:
+        check_repomanager_toml()
+    else:
+        check_repomanager_conf()
+
     start_up()
     readline.set_completer(Completer(commands + repositories).complete)
     readline.parse_and_bind('tab: complete')
