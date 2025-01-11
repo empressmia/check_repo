@@ -359,6 +359,35 @@ def check_repomanager_toml():
     except:
         sys.exit("error occurred when reading config file!")
 
+def add_to_ignore(repo):
+    global REPOSITORIES
+    if repo in REPOSITORIES:
+        path = get_path_of_repo(repo)
+        # check if repo/path is already on ignore
+        if "#" != path[0]:
+            path = "#" + path
+            REPOSITORIES[repo] = path
+            print("$: ignoring {repo} from now on")
+        else:
+            print("$: repo is already ignored, nothing to be done")
+    else:
+        print("$: {repo} is not on the list, please add it to the list first")
+
+
+def add_to_watch(repo):
+    global REPOSITORIES
+    if repo in REPOSITORIES:
+        path = get_path_of_repo(repo)
+        # check if repo is actually on ignore
+        if "#" == path[0]:
+            path = path[1:]
+            REPOSITORIES[repo] = path
+            print("$: added {repo} to watchlist again")
+        else:
+            print("$: {repo} is already on the watchlist, nothing to be done")
+    else:
+        print("$: {repo} is not on the list, please add it to the list first")
+
 #function prints the log of a repo to the screen
 def git_log(repo):
     global REPOSITORIES
