@@ -434,14 +434,18 @@ def entry_loop():
             elif command == 'addrepo':
                 if option != '':
                     add_repo(option)
+                    update_config(compare_dicts())
                 else:
                     print("ERROR: No valid option given!")
             elif command == 'removerepo':
                 remove_repo(option)
+                update_config(compare_dicts())
             elif command == 'ignore':
-                print("$: Sorry, not yet implemented")
+                add_to_ignore(option)
+                update_config(True)
             elif command == 'unignore':
-                print("$: Sorry, not yet implemented")
+                add_to_watch(option)
+                update_config(True)
             elif command == 'showlog':
                 repo_log()
             elif command == 'gitlog':
