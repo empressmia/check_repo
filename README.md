@@ -33,5 +33,3 @@ The `repo_manager` has now a own config-file called `repo_manger.toml` which is 
 created after a first execution. Change the value for keyword `terminal` to the name of the terminal emulator you use. The default one is `konsole`. Also
 an empty repository-list is created after the first run (which should also be a bugfix if you haven't run the shell-script first, sorry for that inconvenience).
 
-### TODOs/Future Work
-Only commands not implemented so far are *ignore* and *unignore* for keeping repositories on the watch-list, but excluding them from any autoupdate or autopush. Also comments to the source code will be added.
