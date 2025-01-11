@@ -367,11 +367,11 @@ def add_to_ignore(repo):
         if "#" != path[0]:
             path = "#" + path
             REPOSITORIES[repo] = path
-            print("$: ignoring {repo} from now on")
+            print("$: ignoring " + repo + " from now on")
         else:
-            print("$: repo is already ignored, nothing to be done")
+            print("$: " + repo + " is already ignored, nothing to be done")
     else:
-        print("$: {repo} is not on the list, please add it to the list first")
+        print("$: " + repo + " is not on the list, please add it to the list first")
 
 
 def add_to_watch(repo):
@@ -382,11 +382,11 @@ def add_to_watch(repo):
         if "#" == path[0]:
             path = path[1:]
             REPOSITORIES[repo] = path
-            print("$: added {repo} to watchlist again")
+            print("$: added " + repo +  " to watchlist again")
         else:
-            print("$: {repo} is already on the watchlist, nothing to be done")
+            print("$: " + repo + " is already on the watchlist, nothing to be done")
     else:
-        print("$: {repo} is not on the list, please add it to the list first")
+        print("$: " + repo + " is not on the list, please add it to the list first")
 
 #function prints the log of a repo to the screen
 def git_log(repo):
